@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => {
     env.BETTER_AUTH_URL ? new URL(env.BETTER_AUTH_URL).hostname : undefined,
   ].filter((host): host is string => Boolean(host));
   const emitSourcemaps = env.POSTHOG_SOURCEMAPS === "true";
+  const wranglerConfigPath = env.OPEN_SEO_WRANGLER_CONFIG || "wrangler.jsonc";
 
   return {
     envPrefix: [
@@ -52,7 +53,11 @@ export default defineConfig(({ mode }) => {
             },
           })
         : null,
-      cloudflare({ inspectorPort: false, viteEnvironment: { name: "ssr" } }),
+      cloudflare({
+        configPath: wranglerConfigPath,
+        inspectorPort: false,
+        viteEnvironment: { name: "ssr" },
+      }),
       tsConfigPaths(),
       tanstackStart(),
       viteReact(),

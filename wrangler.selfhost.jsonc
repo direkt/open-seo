@@ -1,0 +1,77 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "open-seo",
+  "main": "src/server.ts",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "observability": {
+    "enabled": true,
+    "traces": {
+      "enabled": true,
+    },
+  },
+  "placement": {
+    "mode": "smart",
+  },
+  "workflows": [
+    {
+      "name": "site-audit-workflow",
+      "binding": "SITE_AUDIT_WORKFLOW",
+      "class_name": "SiteAuditWorkflow",
+    },
+    {
+      "name": "rank-check-workflow",
+      "binding": "RANK_CHECK_WORKFLOW",
+      "class_name": "RankCheckWorkflow",
+    },
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ONBOARDING_CHAT",
+        "class_name": "OnboardingChatAgent",
+      },
+      {
+        "name": "SAM_CHAT",
+        "class_name": "SamChatAgent",
+      },
+    ],
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["OnboardingChatAgent"],
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["SamChatAgent"],
+    },
+  ],
+  "triggers": {
+    "crons": ["*/15 * * * *"],
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "08a231cbed5243b4a33bd1873f700e01",
+    },
+    {
+      "binding": "OAUTH_KV",
+      "id": "9396b272514446dfb51c67d199f83645",
+    },
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "open-seo-direkt",
+      "database_id": "db7e0217-6f62-4e6e-aa0a-632f494644bb",
+      "migrations_dir": "drizzle",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "bucket_name": "open-seo-direkt",
+      "binding": "R2",
+    },
+  ],
+}
